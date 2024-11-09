@@ -1,0 +1,65 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"description": "PostgreSQL schema",
+	"type": "object",
+	"additionalProperties": false,
+	"properties": {
+		"profiles": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": [
+					"id"
+				],
+				"properties": {
+					"id": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The id"
+					},
+					"host": {
+						"type": "string",
+						"minLength": 1,
+						"default": "127.0.0.1",
+						"description": "The host"
+					},
+					"port": {
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 65535,
+						"default": 5432,
+						"description": "The port"
+					},
+					"username": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The username"
+					},
+					"password": {
+						"type": "string",
+						"minLength": 1,
+						"description": "The password"
+					},
+					"connect_timeout": {
+						"type": "number",
+						"description": "The connect timeout (in seconds)",
+						"default": 5,
+						"minimum": 0
+					},
+					"pool_size": {
+						"type": "number",
+						"description": "Connection pool size",
+						"default": 1,
+						"minimum": 1
+					}
+				}
+			}
+		},
+		"default_profile": {
+			"type": "string",
+			"minLength": 1,
+			"description": "The default profile"
+		}
+	}
+}

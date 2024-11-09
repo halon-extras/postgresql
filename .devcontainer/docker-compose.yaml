@@ -1,0 +1,24 @@
+version: '2'
+services:
+  halon-smtpd:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        HALON_REPO_USER: ${HALON_REPO_USER}
+        HALON_REPO_PASS: ${HALON_REPO_PASS}
+    volumes:
+      - ../:/postgresql
+      - ./smtpd/dist:/etc/halon
+  postgresql:
+    image: postgres:13
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+volumes:
+  postgresql-data:

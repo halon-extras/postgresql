@@ -1,0 +1,10 @@
+import { PostgreSQL } from "extras://postgresql";
+
+// Create "PostgreSQL" instance with an (optional) config profile
+$postgresql = PostgreSQL("postgresql");
+$postgresql->query("CREATE TABLE IF NOT EXISTS employee (name VARCHAR(255), salary INT, working BOOLEAN, age SMALLINT)");
+$postgresql->query("INSERT INTO employee (name, salary, working, age) VALUES ($1, $2, $3, $4)", ["John Doe", 54321, true, 36]);
+$postgresql->query("INSERT INTO employee (name, salary, working, age) VALUES ($1, $2, $3, $4)", ["Jane Doe", 54321, false, 36]);
+echo $postgresql->query("SELECT * FROM employee");
+// [0=>["name"=>"John Doe","salary"=>54321,"working"=>true,"age"=>36],1=>["name"=>"Jane Doe","salary"=>54321,"working"=>false,"age"=>36]]
+$postgresql->query("DELETE FROM employee");

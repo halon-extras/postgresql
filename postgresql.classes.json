@@ -1,0 +1,43 @@
+[
+    {
+        "name": "PostgreSQL",
+        "instantiable": true,
+        "parameters": {
+            "required": [],
+            "optional": [
+                {
+                    "name": "profile",
+                    "type": "string"
+                }
+            ]
+        },
+        "methods": [
+            {
+                "name": "query",
+                "parameters": {
+                    "required": [
+                        {
+                            "name": "query",
+                            "type": "string"
+                        }
+                    ],
+                    "optional": [
+                        {
+                            "name": "params",
+                            "type": "array"
+                        }
+                    ]
+                },
+                "returnType": "array",
+                "detail": "PostgreSQL->query(string $query [, array $params]): array",
+                "value": "query($0)",
+                "documentation": "Pass a \"prepared\" statement to the PostgreSQL server. On error an exception is thrown.",
+                "link": "[Full documentation](https://github.com/halon-extras/postgresql)"
+            }
+        ],
+        "detail": "PostgreSQL([string $profile])",
+        "value": "PostgreSQL($0)",
+        "documentation": "The PostgreSQL class is a [libpqxx](https://github.com/jtv/libpqxx) wrapper class. On error an exception is thrown.",
+        "link": "[Full documentation](https://github.com/halon-extras/postgresql)"
+    }
+]
