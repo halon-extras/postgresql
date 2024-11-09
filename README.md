@@ -75,5 +75,4 @@ $postgresql->query("INSERT INTO employee (name, salary, working, age) VALUES ($1
 $postgresql->query("INSERT INTO employee (name, salary, working, age) VALUES ($1, $2, $3, $4)", ["Jane Doe", 54321, false, 36]);
 echo $postgresql->query("SELECT * FROM employee");
 // [0=>["name"=>"John Doe","salary"=>54321,"working"=>true,"age"=>36],1=>["name"=>"Jane Doe","salary"=>54321,"working"=>false,"age"=>36]]
-$postgresql->query("DELETE FROM employee");
 ```
