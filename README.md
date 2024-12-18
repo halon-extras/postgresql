@@ -33,6 +33,7 @@ plugins:
         - id: postgresql
           host: postgresql
           port: 5432
+          database: mydatabase
           username: postgres
           password: postgres
           connect_timeout: 5
