@@ -57,6 +57,30 @@
 						"description": "Connection pool size",
 						"default": 1,
 						"minimum": 1
+					},
+					"sslmode": {
+						"type": "string",
+						"description": "The sslmode"
+					},
+					"sslcert": {
+						"type": "string",
+						"description": "The sslcert"
+					},
+					"sslkey": {
+						"type": "string",
+						"description": "The sslkey"
+					},
+					"sslpassword": {
+						"type": "string",
+						"description": "The sslpassword"
+					},
+					"sslcertmode": {
+						"type": "string",
+						"description": "The sslcertmode"
+					},
+					"sslrootcert": {
+						"type": "string",
+						"description": "The sslrootcert"
 					}
 				}
 			}

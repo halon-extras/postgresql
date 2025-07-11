@@ -55,6 +55,30 @@ bool parse_config(HalonConfig* cfg, ParsedConfig* parsed_cfg)
 			else
 				conn_str << " connect_timeout=" << 5;
 
+			const char* sslmode = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "sslmode"), nullptr);
+			if (sslmode)
+				conn_str << " sslmode=" << sslmode;
+
+			const char* sslcert = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "sslcert"), nullptr);
+			if (sslcert)
+				conn_str << " sslcert=" << sslcert;
+
+			const char* sslkey = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "sslkey"), nullptr);
+			if (sslkey)
+				conn_str << " sslkey=" << sslkey;
+
+			const char* sslpassword = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "sslpassword"), nullptr);
+			if (sslpassword)
+				conn_str << " sslpassword=" << sslpassword;
+
+			const char* sslcertmode = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "sslcertmode"), nullptr);
+			if (sslcertmode)
+				conn_str << " sslcertmode=" << sslcertmode;
+
+			const char* sslrootcert = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "sslrootcert"), nullptr);
+			if (sslrootcert)
+				conn_str << " sslrootcert=" << sslrootcert;
+
 			const char* pool_size = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "pool_size"), nullptr);
 			if (pool_size)
 				postgresql_profile->pool_size = (unsigned int)strtoul(pool_size, nullptr, 10);
