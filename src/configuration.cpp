@@ -49,8 +49,6 @@ bool parse_config(HalonConfig* cfg, ParsedConfig* parsed_cfg)
 			if (password)
 				conn_str << " password=" << password;
 
-			postgresql_profile->conn_str = conn_str.str();
-
 			const char* connect_timeout = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "connect_timeout"), nullptr);
 			if (connect_timeout)
 				conn_str << " connect_timeout=" << connect_timeout;
@@ -60,6 +58,8 @@ bool parse_config(HalonConfig* cfg, ParsedConfig* parsed_cfg)
 			const char* pool_size = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "pool_size"), nullptr);
 			if (pool_size)
 				postgresql_profile->pool_size = (unsigned int)strtoul(pool_size, nullptr, 10);
+
+			postgresql_profile->conn_str = conn_str.str();
 
 			parsed_cfg->profiles[id] = postgresql_profile;
 		}
