@@ -20,6 +20,7 @@ RUN yum install -y cmake3 make gcc-c++ rpm-build git libpq-devel
 RUN mkdir /tmp/halon
 RUN cd /tmp/halon \
     && curl -O -L https://github.com/jtv/libpqxx/archive/refs/tags/7.9.2.tar.gz \
+    && echo "e37d5774c39f6c802e32d7f418e88b8e530404fb54758516e884fc0ebdee6da4 7.9.2.tar.gz" | sha256sum -c \
     && tar -zxvf 7.9.2.tar.gz && cd libpqxx-7.9.2 \
     && mkdir -p /libpqxx && cp COPYING /libpqxx/LICENSE \
     && mkdir build && cd build \
