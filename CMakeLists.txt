@@ -76,6 +76,8 @@ INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/postgresql.so.link" DESTINATION plugi
 INSTALL(FILES "LICENSE" DESTINATION share/doc/plugins/postgresql)
 INSTALL(FILES "/libpqxx/LICENSE" DESTINATION share/doc/plugins/postgresql RENAME LICENSE.libpqxx)
 
+INSTALL(FILES "sbom.json" DESTINATION share/sbom/plugins RENAME ${PROJECT_NAME}.json)
+
 SET(CMAKE_INSTALL_PREFIX "/opt/halon")
 SET(CPACK_PACKAGING_INSTALL_PREFIX "/opt/halon")
 

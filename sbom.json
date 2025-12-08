@@ -1,0 +1,20 @@
+{
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.4",
+    "version": 1,
+    "components": [
+        {
+            "type": "library",
+            "name": "libpqxx",
+            "version": "7.9.2",
+            "licenses": [
+                {
+                    "license": {
+                        "id": "BSD-3-Clause"
+                    }
+                }
+            ],
+            "purl": "pkg:github/jtv/libpqxx@7.9.2"
+        }
+    ]
+}
