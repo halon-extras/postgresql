@@ -2,3 +2,4 @@
 /build/dist
 /build/vscode
 .devcontainer/smtpd/dist
+license.key
