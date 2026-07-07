@@ -36,7 +36,22 @@ pqxx::result exec_prepared_retry(PostgreSQL* ptr, std::shared_ptr<pqxx::connecti
 		// Attempt query
 		pqxx::nontransaction tx{ *connection };
 		connection->prepare("prepared_query", query);
-		result = tx.exec_prepared("prepared_query", params);
+		try
+		{
+			result = tx.exec_prepared("prepared_query", params);
+		}
+		catch (std::exception const&)
+		{
+			try
+			{
+				connection->unprepare("prepared_query");
+			}
+			catch (std::exception const&)
+			{
+				// Do nothing
+			}
+			throw;
+		}
 		connection->unprepare("prepared_query");
 		tx.commit();
 	}
@@ -46,7 +61,22 @@ pqxx::result exec_prepared_retry(PostgreSQL* ptr, std::shared_ptr<pqxx::connecti
 		connection = std::make_shared<pqxx::connection>(ptr->profile->conn_str);
 		pqxx::nontransaction tx{ *connection };
 		connection->prepare("prepared_query", query);
-		result = tx.exec_prepared("prepared_query", params);
+		try
+		{
+			result = tx.exec_prepared("prepared_query", params);
+		}
+		catch (std::exception const&)
+		{
+			try
+			{
+				connection->unprepare("prepared_query");
+			}
+			catch (std::exception const&)
+			{
+				// Do nothing
+			}
+			throw;
+		}
 		connection->unprepare("prepared_query");
 		tx.commit();
 	}
