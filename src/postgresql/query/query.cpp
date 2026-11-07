@@ -169,7 +169,7 @@ void PostgreSQL_query(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLVal
 		for (pqxx::row_size_type col = 0; col < result.columns(); ++col)
 		{
 			const char* column_name = result.column_name(col);
-			pqxx::oid oid = result.column_type(column_name);
+			pqxx::oid oid = result.column_type(col);
 			std::string column_type;
 
 			try
