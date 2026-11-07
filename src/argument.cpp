@@ -1,5 +1,6 @@
 #include "argument.hpp"
 #include <cstring>
+#include <cmath>
 
 bool parse_hsl_argument_as_bool(HalonHSLContext* hhc, HalonHSLArguments* args, size_t index, bool required, bool& value)
 {
@@ -125,7 +126,11 @@ bool parse_hsl_argument_as_params(HalonHSLContext* hhc, HalonHSLArguments* args,
 					HalonMTA_hsl_value_get(v, HALONMTA_HSL_TYPE_NUMBER, &_value, nullptr);
 					try
 					{
-						value.append(_value);
+						// Send whole numbers as integers, the shortest double form ("1e+05") is rejected by integer columns
+						if (std::trunc(_value) == _value && std::fabs(_value) < 9.2e18)
+							value.append((long long)_value);
+						else
+							value.append(_value);
 					}
 					catch (std::exception const& err)
 					{
