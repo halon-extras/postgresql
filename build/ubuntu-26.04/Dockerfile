@@ -15,13 +15,13 @@ RUN echo "deb [arch=${TARGETARCH} signed-by=/usr/share/keyrings/halon-archive-ke
 RUN echo "machine repo.halon.io login ${HALON_REPO_USER} password ${HALON_REPO_PASS}" >> /etc/apt/auth.conf
 RUN apt-get update && apt-get install -y halon-smtpd=6.11.0
 
-RUN apt-get update && apt-get install -y build-essential cmake git curl file pkg-config libpq-dev
+RUN apt-get update && apt-get install -y build-essential cmake git curl file pkg-config libpq-dev libarchive-tools
 
 RUN mkdir /tmp/halon
 RUN cd /tmp/halon \
     && curl -O -L https://github.com/jtv/libpqxx/archive/refs/tags/7.9.2.tar.gz \
     && echo "e37d5774c39f6c802e32d7f418e88b8e530404fb54758516e884fc0ebdee6da4 7.9.2.tar.gz" | sha256sum -c \
-    && tar -zxvf 7.9.2.tar.gz && cd libpqxx-7.9.2 \
+    && bsdtar -zxvf 7.9.2.tar.gz && cd libpqxx-7.9.2 \
     && mkdir -p /libpqxx && cp COPYING /libpqxx/LICENSE \
     && mkdir build && cd build \
     && cmake -DSKIP_BUILD_TEST=on -DBUILD_SHARED_LIBS=off -DCMAKE_POSITION_INDEPENDENT_CODE=ON .. \
