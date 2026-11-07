@@ -52,6 +52,8 @@ The PostgreSQL class is a [libpqxx](https://github.com/jtv/libpqxx) wrapper clas
 
 Pass a "prepared" statement to the PostgreSQL server. On error an exception is thrown. See the table below for the data types mapping.
 
+If a result has more than one column with the same name, the repeats get a suffix (`_2`, `_3`, ...) so that every value can be read, e.g. `SELECT 1, 'abc'` returns `["?column?"=>1,"?column?_2"=>"abc"]`.
+
 | PostgreSQL  | HSL       |
 |-------------|-----------|
 | `bool`      | `boolean` |

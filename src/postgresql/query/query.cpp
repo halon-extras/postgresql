@@ -1,5 +1,7 @@
 #include "query.hpp"
 #include <string>
+#include <set>
+#include <vector>
 #include "postgresql/postgresql.hpp"
 #include <pqxx/pqxx>
 #include "argument.hpp"
@@ -109,6 +111,35 @@ std::string get_column_type(PostgreSQL* ptr, std::shared_ptr<pqxx::connection> c
 	return column_type;
 }
 
+// Make column names unique so no value is shadowed in the HSL result array.
+// Repeated names get an occurrence suffix ("?column?", "?column?_2", ...)
+// that never collides with a name present in the result.
+std::vector<std::string> get_column_names(const pqxx::result& result)
+{
+	std::set<std::string> originals;
+	for (pqxx::row_size_type col = 0; col < result.columns(); ++col)
+		originals.insert(result.column_name(col));
+
+	std::vector<std::string> names;
+	std::set<std::string> used;
+	for (pqxx::row_size_type col = 0; col < result.columns(); ++col)
+	{
+		std::string name = result.column_name(col);
+		if (used.count(name))
+		{
+			std::string candidate;
+			size_t n = 2;
+			do
+				candidate = name + "_" + std::to_string(n++);
+			while (used.count(candidate) || originals.count(candidate));
+			name = candidate;
+		}
+		used.insert(name);
+		names.push_back(name);
+	}
+	return names;
+}
+
 void PostgreSQL_query(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
 {
 	PostgreSQL* ptr = (PostgreSQL*)HalonMTA_hsl_object_ptr_get(hhc);
@@ -154,6 +185,8 @@ void PostgreSQL_query(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLVal
 		return;
 	}
 
+	const std::vector<std::string> column_names = get_column_names(result);
+
 	// Set HSL response
 	HalonMTA_hsl_value_set(ret, HALONMTA_HSL_TYPE_ARRAY, nullptr, 0);
 	int idx = 0;
@@ -168,7 +201,7 @@ void PostgreSQL_query(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLVal
 
 		for (pqxx::row_size_type col = 0; col < result.columns(); ++col)
 		{
-			const char* column_name = result.column_name(col);
+			const char* column_name = column_names[col].c_str();
 			pqxx::oid oid = result.column_type(col);
 			std::string column_type;
 
