@@ -54,6 +54,8 @@ Pass a "prepared" statement to the PostgreSQL server. On error an exception is t
 
 If a result has more than one column with the same name, the repeats get a suffix (`_2`, `_3`, ...) so that every value can be read, e.g. `SELECT 1, 'abc'` returns `["?column?"=>1,"?column?_2"=>"abc"]`.
 
+The query and string parameters must not contain NUL bytes (PostgreSQL text cannot hold them), an exception is thrown if they do. Pass binary data encoded, e.g. `decode($1, 'base64')`.
+
 | PostgreSQL  | HSL       |
 |-------------|-----------|
 | `bool`      | `boolean` |

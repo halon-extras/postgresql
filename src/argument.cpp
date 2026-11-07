@@ -1,4 +1,5 @@
 #include "argument.hpp"
+#include <cstring>
 
 bool parse_hsl_argument_as_bool(HalonHSLContext* hhc, HalonHSLArguments* args, size_t index, bool required, bool& value)
 {
@@ -62,8 +63,15 @@ bool parse_hsl_argument_as_string(HalonHSLContext* hhc, HalonHSLArguments* args,
 			HalonMTA_hsl_value_set(e, HALONMTA_HSL_TYPE_EXCEPTION, "argument is not a string", 0);
 			return false;
 		}
-		HalonMTA_hsl_value_get(arg, HALONMTA_HSL_TYPE_STRING, &_value, nullptr);
-		value = _value;
+		size_t _size = 0;
+		HalonMTA_hsl_value_get(arg, HALONMTA_HSL_TYPE_STRING, &_value, &_size);
+		if (memchr(_value, '\0', _size))
+		{
+			HalonHSLValue* e = HalonMTA_hsl_throw(hhc);
+			HalonMTA_hsl_value_set(e, HALONMTA_HSL_TYPE_EXCEPTION, "argument contains a NUL byte", 0);
+			return false;
+		}
+		value.assign(_value, _size);
 	}
 	else
 	{
@@ -91,10 +99,18 @@ bool parse_hsl_argument_as_params(HalonHSLContext* hhc, HalonHSLArguments* args,
 				if (HalonMTA_hsl_value_type(v) == HALONMTA_HSL_TYPE_STRING)
 				{
 					const char* _value;
-					HalonMTA_hsl_value_get(v, HALONMTA_HSL_TYPE_STRING, &_value, nullptr);
+					size_t _size = 0;
+					HalonMTA_hsl_value_get(v, HALONMTA_HSL_TYPE_STRING, &_value, &_size);
+					// PostgreSQL text cannot contain NUL; libpq would silently truncate at it
+					if (memchr(_value, '\0', _size))
+					{
+						HalonHSLValue* e = HalonMTA_hsl_throw(hhc);
+						HalonMTA_hsl_value_set(e, HALONMTA_HSL_TYPE_EXCEPTION, "array item contains a NUL byte", 0);
+						return false;
+					}
 					try
 					{
-						value.append(_value);
+						value.append(std::string(_value, _size));
 					}
 					catch (std::exception const& err)
 					{
