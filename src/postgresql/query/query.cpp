@@ -32,6 +32,7 @@ std::shared_ptr<pqxx::connection> get_connection(PostgreSQL* ptr)
 pqxx::result exec_prepared_retry(PostgreSQL* ptr, std::shared_ptr<pqxx::connection>& connection, const std::string& query, const pqxx::params& params)
 {
 	pqxx::result result;
+	bool sent = false;
 
 	try
 	{
@@ -40,6 +41,7 @@ pqxx::result exec_prepared_retry(PostgreSQL* ptr, std::shared_ptr<pqxx::connecti
 		connection->prepare("prepared_query", query);
 		try
 		{
+			sent = true;
 			result = tx.exec_prepared("prepared_query", params);
 		}
 		catch (std::exception const&)
@@ -59,6 +61,10 @@ pqxx::result exec_prepared_retry(PostgreSQL* ptr, std::shared_ptr<pqxx::connecti
 	}
 	catch (pqxx::broken_connection&)
 	{
+		// Never retry once the query has been sent, it may already have been executed
+		if (sent)
+			throw;
+
 		// Reconnect and attempt query again for broken connections
 		connection = std::make_shared<pqxx::connection>(ptr->profile->conn_str);
 		pqxx::nontransaction tx{ *connection };
