@@ -23,6 +23,12 @@ bool parse_config(HalonConfig* cfg, ParsedConfig* parsed_cfg)
 				return false;
 			}
 
+			if (parsed_cfg->profiles.count(id))
+			{
+				syslog(LOG_CRIT, "postgresql: Duplicate profile id %s", id);
+				return false;
+			}
+
 			std::stringstream conn_str;
 
 			const char* host = HalonMTA_config_string_get(HalonMTA_config_object_get(profile, "host"), nullptr);
@@ -87,6 +93,11 @@ bool parse_config(HalonConfig* cfg, ParsedConfig* parsed_cfg)
 
 			parsed_cfg->profiles[id] = postgresql_profile;
 		}
+	}
+	if (default_profile && !parsed_cfg->profiles.empty() && !parsed_cfg->profiles.count(default_profile))
+	{
+		syslog(LOG_CRIT, "postgresql: default_profile %s does not exist", default_profile);
+		return false;
 	}
 	if (parsed_cfg->profiles.empty())
 	{

@@ -47,13 +47,13 @@
 						"description": "The password"
 					},
 					"connect_timeout": {
-						"type": "number",
+						"type": "integer",
 						"description": "The connect timeout (in seconds)",
 						"default": 5,
 						"minimum": 0
 					},
 					"pool_size": {
-						"type": "number",
+						"type": "integer",
 						"description": "Connection pool size",
 						"default": 1,
 						"minimum": 1
